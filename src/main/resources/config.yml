@@ -1,0 +1,154 @@
+# NexusRedstone configuration.
+#
+# Design note: the game-balance SHAPE of every component (which Engineer level unlocks it, what
+# settings it has, what each setting's range is) is fixed in code. This file holds the tunable
+# NUMBERS around them. Every value is clamped when loaded, so a typo can never produce a
+# zero-length timer, a negative budget or an unbounded loop.
+
+enabled: true
+
+# ---------------------------------------------------------------- Engineer mastery skill
+skill:
+  max-level: 50
+  xp-base: 10.0                  # xp for level n is about xp-base * n^1.5
+  xp-place-scale: 1.0            # multiplier on the one-time first-placement reward of each component type
+  activity-xp: 2                 # xp per running machine per activity interval
+  activity-xp-cap: 8             # most activity xp one player earns per interval, however many machines they run
+  activity-interval-seconds: 120
+  xp-per-thousand-items-moved: 4 # transport network milestone reward
+
+# ---------------------------------------------------------------- simulation
+simulation:
+  step-interval-ticks: 2         # one simulation step; each hop between components takes one step
+  sensor-interval-ticks: 10      # how often sensors sample the world
+  save-interval-seconds: 60
+  max-components-base: 48        # components a level-1 engineer may own
+  max-components-per-level: 6
+  max-components-ceiling: 400
+  require-loaded-chunk: true     # components in unloaded chunks simply pause
+
+clock:
+  min-period-base: 10            # fastest clock (ticks per cycle) at level 1
+  min-period-floor: 2
+  levels-per-tick: 4             # every this many levels the fastest clock gets one tick faster
+
+# ---------------------------------------------------------------- wireless signals
+wireless:
+  range-local: 32
+  range-regional: 128
+  range-long: 512
+  level-regional: 18             # Engineer level needed for tier 1
+  level-long: 28                 # tier 2
+  level-cross: 40                # tier 3 (cross-dimension)
+  blocks-per-tick: 64.0          # signal travel speed: latency grows with distance
+  stale-ticks: 200               # a silent transmitter stops being heard after this long
+  max-channel-length: 16
+
+sensors:
+  max-radius: 32
+
+# ---------------------------------------------------------------- programmable logic block
+plc:
+  base-ops: 16                   # operations a level-1 program may contain
+  ops-per-level: 2
+  max-ops: 160
+  max-length: 200
+
+# ---------------------------------------------------------------- lag-machine protection
+lag:
+  enabled: true
+  window-ticks: 100
+  max-toggles-per-window: 48     # a component flipping faster than this is shut off (ring oscillators, rapid clocks)
+  chunk-budget-per-second: 600   # signal changes per chunk per second before throttling
+  budget-bonus-per-level: 0.02   # higher-level engineers get a larger budget
+  throttle-divisor: 4
+  trip-cooldown-seconds: 30
+  alert-cooldown-seconds: 60
+  vanilla-warn-per-second: 3000  # staff are told when plain vanilla redstone in one chunk exceeds this
+
+# ---------------------------------------------------------------- tiered hoppers
+hoppers:
+  vacuum-radius-diamond: 2
+  vacuum-radius-netherite: 4
+  vacuum-interval-ticks: 8
+  vacuum-max-items-per-run: 8
+  batch-multiplier: 1.0          # scales every tier's items per transfer (set 0 to turn batching off)
+
+# ---------------------------------------------------------------- item transport network
+transport:
+  port-items-base: 8             # items an input port moves per pull at level 1
+  port-items-per-level: 0.5
+  port-items-ceiling: 64
+  pipe-length-base: 24           # longest pipe route at level 1
+  pipe-length-per-level: 2
+  pipe-length-ceiling: 160
+  network-max-nodes: 600         # hard cap on how many pipes one route search may visit
+  path-ticks-per-pipe: 1
+
+storage:
+  sorter-cooldown-ticks: 20
+
+dispensers:
+  spray-jitter: 0.18
+  power-multiplier: 2.0
+
+# ---------------------------------------------------------------- mega piston and block mover
+mega-piston:
+  limit-base: 24                 # vanilla is 12
+  limit-per-level: 1
+  limit-ceiling: 64
+  cooldown-ticks: 10
+
+mover:
+  blocks-base: 32
+  blocks-per-level: 6
+  blocks-ceiling: 256
+  max-distance: 32
+  display-cap: 160               # structures larger than this move instantly instead of animating
+  cooldown-ticks: 20
+  carry-entities: true
+
+# ---------------------------------------------------------------- blueprints
+blueprints:
+  blocks-base: 48
+  blocks-per-level: 8
+  blocks-ceiling: 512
+  max-encoded-chars: 60000
+  claim-probe: true              # fire a break event at sample points so claim plugins can refuse a paste
+
+# ---------------------------------------------------------------- debugger, visualizer, oscilloscope
+tools:
+  cooldown-ticks: 6
+  scope-samples: 160
+  max-probes-per-player: 4
+  visualizer-seconds: 12
+  visualizer-radius: 24
+
+# ---------------------------------------------------------------- dramatic messages and villager commentary
+messages:
+  enabled: true
+  villager-commentary: true
+  villager-radius: 10.0
+  villager-cooldown-seconds: 30
+  cooldown-seconds: 8
+  # Optional overrides. A topic listed here REPLACES its built-in lines entirely. Topics:
+  # first-component, level-up, clock-alive, latch-flipped, counter-fired, wireless-linked,
+  # plc-running, plc-error, lag-trip, piston-fired, mover-trip, transport-milestone, sorted,
+  # blueprint-saved, blueprint-pasted, hopper-upgraded, sensor-triggered.
+  # lines:
+  #   clock-alive:
+  #     - "Your clock ticks to life."
+  # villager-lines:
+  #   toolsmith:
+  #     - "A fine bit of work, that."
+
+# The Redstone Engineer's Manual: a written book explaining every part of this plugin. Every
+# player who has not got the current edition receives one the next time they are online, and
+# /redstone manual gives a replacement to anyone who has lost theirs.
+manual:
+  give-on-join: true
+  title: "Redstone Engineer's Manual"   # written-book titles are limited to 32 characters
+  author: "NexusRedstone"
+
+recipes:
+  enabled: true

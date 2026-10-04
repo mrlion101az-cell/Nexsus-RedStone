@@ -1,0 +1,25 @@
+name: NexusRedstone
+version: ${project.version}
+main: com.nexuscraft.nexusredstone.NexusRedstonePlugin
+api-version: '1.21'
+author: RealSociety
+description: "The first real redstone overhaul: logic gates, latches, counters, precision clocks, analog math, wireless signals, sensors and a tiny programmable logic block, all built on top of vanilla redstone so every existing contraption keeps working. Tiered filtering hoppers, an item transport network, sorting barrels, smart dispensers, a mega piston that pushes past 12 blocks, and an animated block mover. Engineer mastery skill, lag-machine protection, an oscilloscope and visualizer for debugging, circuit blueprints, and dramatic messages with villager commentary."
+
+commands:
+  redstone:
+    description: Engineer's toolkit - skill, components, settings, filters, blueprints, scopes.
+    usage: /redstone <help|skill|list|mine|info|set|text|filter|blueprint|scope|visualize|sort|remove>
+    aliases: [rs, nexusredstone]
+    permission: nexusredstone.use
+    permission-message: "§cYou don't have permission to do that."
+
+permissions:
+  nexusredstone.use:
+    description: Use components, the tools, and the /redstone command.
+    default: true
+  nexusredstone.admin:
+    description: Give items, read lag reports, reload config, edit anyone's components.
+    default: op
+  nexusredstone.bypass:
+    description: Ignore Engineer level gates, component limits and blueprint costs.
+    default: op
